@@ -7,5 +7,5 @@ Proiectul 1 la Managementul Proiectelor Software, anul universitar 2016-2017
 - Lupancescu Diana
 - Man Cristina
 - Pojar Mihai-Corneliu
-- Sirbu Lavinia-Stefania    343C4
+- Sirbu Lavinia-Stefania    341C4
 - Tufa Adriana              343C4
