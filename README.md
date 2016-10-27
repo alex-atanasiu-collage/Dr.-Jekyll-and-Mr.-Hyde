@@ -4,7 +4,7 @@ Proiectul 1 la Managementul Proiectelor Software, anul universitar 2016-2017
 ## Membrii echipei:
 - Atanasiu Alexandru-Marian 342C4
 - Boicu Ionut               343C4
-- Lupancescu Diana
+- Lupancescu Diana          343C1
 - Man Cristina              341C5
 - Pojar Mihai-Corneliu      341C5
 - Sirbu Lavinia-Stefania    341C4
