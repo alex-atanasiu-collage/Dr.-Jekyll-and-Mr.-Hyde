@@ -1,4 +1,4 @@
-/*
+package project;/*
  * ClassName: MainController.java
  * Author: Alexandru-Marian Atanasiu, alexandru.atanasiu@outlook.com
  * Created: 20-10-2016

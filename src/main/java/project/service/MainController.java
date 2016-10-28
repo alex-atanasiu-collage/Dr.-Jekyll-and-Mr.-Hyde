@@ -5,7 +5,7 @@
  * Last Updated: 20-10-2016
  * Version: 0.1 
  */
-package service;
+package project.service;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
