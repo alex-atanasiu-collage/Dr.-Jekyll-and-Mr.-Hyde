@@ -9,3 +9,4 @@ Proiectul 1 la Managementul Proiectelor Software, anul universitar 2016-2017
 - Pojar Mihai-Corneliu      341C5
 - Sirbu Lavinia-Stefania    341C4
 - Tufa Adriana              343C4
+- Murgan Ioana Maria        341C5
