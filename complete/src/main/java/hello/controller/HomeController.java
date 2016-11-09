@@ -62,7 +62,6 @@ public class HomeController {
         System.out.println(move.getPlayerName() + "   " + move.getMove());
         Player player = game.getPlayer(move.getPlayerName());
         //Test
-        game.getConfig(game.configFile);
         player.setScore(player.getScore() + 1);
         player.move(move.getMove());
         return game;
