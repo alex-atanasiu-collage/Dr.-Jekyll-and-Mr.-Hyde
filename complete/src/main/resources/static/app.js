@@ -6,6 +6,15 @@ var right = false;
 var down = false;
 var left = false;
 
+mapLenght = 1000;
+mapHeight = 1000;
+wallLat = 10;
+charLat = 4 * wallLat;
+
+var characters = [];
+
+var gameInfo;
+
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
@@ -54,6 +63,9 @@ function move(move) {
 }
 
 function showGame(game) {
+    gameInfo = game;
+    console.log(gameInfo);
+
     $("#game").html("");
     var nrOfPlayers = game.playerList.length;
     if(nrOfPlayers < 4 && gameOn == false) {
@@ -66,6 +78,19 @@ function showGame(game) {
 
     for (var i = 0; i < nrOfPlayers; i++) {
         $("#game").append("<p> player " + game.playerList[i].name + " </p>");
+        if (allSprites.length <= i) {
+            var img = loadImage("pumpkin.png");
+            characters += createSprite((game.playerList[i].positionOx-2) * wallLat,
+                                       (game.playerList[i].positionOy-2) * wallLat,
+                                       charLat, charLat);
+            characters[i].addImage(img);
+        }
+        else {
+            console.log("personajul " + i);
+            console.log(characters[i]);
+            allSprites[i].position.x = (game.playerList[i].positionOx-2) * wallLat;
+            allSprites[i].position.y = (game.playerList[i].positionOy-2) * wallLat;
+        }
     }
 
     $("#game").append("<p> test -----> score 1st player " + game.playerList[0].score + " </p>");
@@ -77,13 +102,28 @@ $(function () {
     });
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
-
-    //TODO - change the events that call move function
-    $("#up").click(function() { move("up"); });
-    $("#right").click(function() { move("right"); });
-    $("#down").click(function() { move("down"); });
-    $("#left").click(function() { move("left"); });
 });
+
+document.onkeydown = function(e) {
+    switch (e.keyCode) {
+        case 37:
+            console.log('left');
+            move('left');
+            break;
+        case 38:
+            console.log('up');
+            move('up');
+            break;
+        case 39:
+            console.log('right');
+            move('right');
+            break;
+        case 40:
+            console.log('down');
+            move('down');
+            break;
+    }
+};
 
 function disconnect() {
     if (stompClient != null) {
@@ -94,3 +134,29 @@ function disconnect() {
     setConnected(false);
     console.log("Disconnected");
 }
+
+function setup() {
+	createCanvas(mapLenght, mapHeight);
+}
+
+function draw() {
+  //background(0,0,0);
+
+  // draw map
+  if (gameInfo != undefined) {
+      fill(0, 29, 178);
+      for(x = 0; x < gameInfo.board.length; x++) {
+        for (y = 0; y < gameInfo.board.length; y++) {
+            if (gameInfo.board[y][x] == 0) {
+                fill(255, 255, 255);
+                rect(x * wallLat, y * wallLat, wallLat, wallLat);
+            } else {
+                fill(0, 29, 178);
+                rect(x * wallLat, y * wallLat, wallLat, wallLat);
+            }
+        }
+      }
+  }
+  drawSprites();
+}
+

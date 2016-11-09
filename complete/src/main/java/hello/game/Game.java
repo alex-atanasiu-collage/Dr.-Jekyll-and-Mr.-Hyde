@@ -15,8 +15,10 @@ public class Game {
     public int board[][];
     public List<Player> playerList;
 
+    private DrJ drJ = new DrJ();
+
     public Game(){
-        board = new int[55][55];
+        board = drJ.dreaptaJos;
         playerList = new ArrayList<>();
     }
 
