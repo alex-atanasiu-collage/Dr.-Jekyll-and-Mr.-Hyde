@@ -4,6 +4,7 @@ import hello.message.Message;
 import hello.game.Game;
 import hello.game.Player;
 import hello.message.Move;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -61,6 +62,7 @@ public class HomeController {
         System.out.println(move.getPlayerName() + "   " + move.getMove());
         Player player = game.getPlayer(move.getPlayerName());
         //Test
+        game.getConfig(game.configFile);
         player.setScore(player.getScore() + 1);
         player.move(move.getMove());
         return game;
