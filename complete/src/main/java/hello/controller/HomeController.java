@@ -57,7 +57,7 @@ public class HomeController {
     @MessageMapping("/move")
     @SendTo("/topic/game")
     public Game move(Move move) throws Exception{
-        Thread.sleep(1000);
+//        Thread.sleep(1000);
         System.out.println(move.getPlayerName() + "   " + move.getMove());
         Player player = game.getPlayer(move.getPlayerName());
         //Test
