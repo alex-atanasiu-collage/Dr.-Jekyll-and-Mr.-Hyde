@@ -96,18 +96,22 @@ public class Player {
          */
         if(direction.equals("up")){
             checkCollisionUp();
+            positionOy--;
             return;
         }
         if(direction.equals("right")){
             checkCollisionRight();
+            positionOx++;
             return;
         }
         if(direction.equals("down")){
             checkCollisionDown();
+            positionOy++;
             return;
         }
         if(direction.equals("left")){
             checkCollisionLeft();
+            positionOx--;
             return;
         }
     }
