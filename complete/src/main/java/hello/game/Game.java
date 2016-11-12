@@ -22,10 +22,38 @@ public class Game {
     public int board[][];
     public List<Player> playerList;
 
-    private DrJ drJ = new DrJ();
-
     public Game(){
-        board = drJ.dreaptaJos;
+        Random rand = new Random();
+        DrJ one = new DrJ(rand.nextInt(3) + 1);
+        DrS two = new DrS(rand.nextInt(3) + 1);
+        StJ three = new StJ(rand.nextInt(3) + 1);
+        StS four = new StS(rand.nextInt(3) + 1);
+        int [][] sts = four.get();
+        int [][] stj = three.get();
+        int [][] drj = one.get();
+        int [][] drs = two.get();
+        System.out.println(sts.length + " " +  stj.length + drs[0].length + drj[0].length);
+        board = new int[sts.length + stj.length][sts[0].length + drs[0].length];
+        int i, j, k, m;
+        for (i = 0; i < sts.length; i ++) {
+            for (j = 0; j < sts[0].length; j++) {
+                board[i][j] = sts[i][j];
+            }
+            k = j;
+            for (j = 0; j < drs[0].length; j++) {
+                board[i][k + j] = drs[i][j];
+            }
+        }
+        m = i;
+        for (i = 0; i < stj.length; i ++) {
+            for (j = 0; j < stj[0].length; j++) {
+                board[m + i][j] = stj[i][j];
+            }
+            k = j;
+            for (j = 0; j < drj[0].length; j++) {
+                board[m + i][k + j] = drj[i][j];
+            }
+        }
         playerList = new ArrayList<>();
     }
 
