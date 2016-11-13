@@ -123,9 +123,6 @@ function setup() {
 // Draw on canvas; this is called continously
 function draw() {
   // draw map
-  stompClient.subscribe('/topic/game', function (game) {
-          showGame(JSON.parse(game.body));
-      });
   if (gameInfo != undefined) {
       for(x = 0; x < gameInfo.board.length; x++) {
         for (y = 0; y < gameInfo.board.length; y++) {
@@ -145,7 +142,6 @@ function draw() {
 }
 
 document.onkeydown = function(e) {
-    console.log(e.keyCode);
     switch (e.keyCode) {
         case 65:
             console.log('left');

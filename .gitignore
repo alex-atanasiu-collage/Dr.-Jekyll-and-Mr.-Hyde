@@ -19,8 +19,8 @@ ExportedObj/
 *.svd
 
 # IntelliJ Project Files
-.idea
-target
+*.idea
+*target
 *.iml
 
 # Unity3D generated meta files
