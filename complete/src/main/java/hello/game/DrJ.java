@@ -2,19 +2,13 @@ package hello.game;
 
 public class DrJ extends Board {
 
-	public DrJ(int index) {
-		this.index = index;
+	public DrJ() {
+		int index = 1;
+		dreaptaJos = DrJ1;
 	}
-	public int index;
+
 	public int[][] dreaptaJos;
-	public int[][] get() {
-		if (index == 1)
-			return DrJ1;
-		else if (index == 2)
-			return DrJ2;
-		else
-			return DrJ3;
-	}
+
 	int[][] DrJ1 =
 
 	{
