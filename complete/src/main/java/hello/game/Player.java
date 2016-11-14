@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class Player {
 
     @Autowired
-    private Game game;
-
+    private Game game= new Game();
+    public int matrix[][];
     private int positionOx;
     private int positionOy;
-
+    public int whosHyde = 0;
     private int score;
 
     private String name;
@@ -24,10 +24,33 @@ public class Player {
         this.positionOx = 10;
         this.positionOy = 10;
     }
+    public boolean isHyde(){
+        return false;
+    }
 
-    public int getPositionOx() {
+    public int getPositionOx()
+    {
         return positionOx;
     }
+
+    public int getPositionOxHyde() {
+        if (isHyde()== true)
+            return positionOx;
+        else
+            return -1;
+
+
+    }
+
+    public int getPositionOyHyde() {
+        if (isHyde()==true)
+            return positionOy;
+        else
+            return -1;
+
+
+    }
+
 
     public void setPositionOx(int positionOx) {
         this.positionOx = positionOx;
@@ -38,6 +61,11 @@ public class Player {
     }
 
     public void setPositionOy(int positionOy) {
+        this.positionOy = positionOy;
+    }
+
+    public void updatePosition(int positionOx, int positionOy) {
+        this.positionOx = positionOx;
         this.positionOy = positionOy;
     }
 
@@ -57,59 +85,131 @@ public class Player {
         this.name = name;
     }
 
-    public void checkCollisionUp(){
+
+    public void checkCollisionUp() {
         /*TODO
             the matrix is in game.getBoard()
             update position
         */
-
+        matrix = game.getBoard();
+        if ( matrix[getPositionOx()][getPositionOy() ] == 1) {
+            int x4=getPositionOx();
+            int y4=getPositionOy();
+            updatePosition(x4+1, y4);
+            System.out.println("collision");
+            System.out.println(x4+1);
+            System.out.println(y4);
+        } else{
+            updatePosition(getPositionOx(),getPositionOy() );
+            System.out.println(getPositionOx());
+            System.out.println(getPositionOy());
+        }
+//        if (!isHyde() && getPositionOyHyde() == positionOy - 1) {
+//
+//
+//        } else
+//            updatePosition(getPositionOx(), getPositionOy() - 1);
     }
 
-    public void checkCollisionDown(){
+
+    private void checkCollisionDown() {
         /*TODO
             the matrix is in game.getBoard()
             update position
         */
+        matrix = game.getBoard();
+        if (matrix[getPositionOx()][getPositionOy() ] == 1){
+            int y1=getPositionOy();
+            int x1=getPositionOx();
+            updatePosition(x1,y1-1);
+            System.out.println("Fuck collision");
+            System.out.println(x1);
+            System.out.println(y1+1);
+        }
+        else{
+            updatePosition(getPositionOx(), getPositionOy() );
+            System.out.println(getPositionOx());
+            System.out.println(getPositionOy());}
+        if (!isHyde() && getPositionOyHyde() == positionOy+1 ) {
+
+        } else
+            updatePosition(getPositionOx(), getPositionOy() );
+
 
     }
 
-    public void checkCollisionRight(){
+    private void checkCollisionRight() {
         /*TODO
             the matrix is in game.getBoard()
             update position
         */
+        matrix = game.getBoard();
+        if (matrix[getPositionOx() ][getPositionOy()] == 1){
+            int x2=getPositionOx();
+            int y2=getPositionOy();
+            updatePosition(x2-1, y2);
+            System.out.println("Collision 2");
+            System.out.println(x2+1);
+            System.out.println(getPositionOy());
+        }
+        else{
+            updatePosition(getPositionOx() , getPositionOy());
+            System.out.println(getPositionOx());
+            System.out.println(getPositionOy());}
+//        if (!isHyde() && getPositionOxHyde() == positionOx + 1) {
+//
+//        } else
+//            updatePosition(getPositionOx() + 1, getPositionOy());
+
 
     }
 
-    public void checkCollisionLeft(){
+    public void checkCollisionLeft() {
         /*TODO
             the matrix is in game.getBoard()
             update position
         */
+        matrix = game.getBoard();
+        if (matrix[getPositionOx()][getPositionOy()] == 1){
+            int x3=getPositionOx();
+            int y3=getPositionOy();
+            updatePosition(x3+1, y3);
+            System.out.println(x3-1);
+            System.out.println(y3);
+            System.out.println("cool");}
+        else{
+            updatePosition(getPositionOx() , getPositionOy());
+            System.out.println(getPositionOx());
+            System.out.println(getPositionOy());}
+//        if (!isHyde() && getPositionOxHyde() == positionOx - 1) {
+//
+//        } else
+//            updatePosition(getPositionOx() - 1, getPositionOy());
+
 
     }
 
-    public void move(String direction){
+    public void move(String direction) {
         /*TODO
             check collision with walls and with the other players from game.playerList
             also...updateScore() if the player collides with the crazy player
          */
-        if(direction.equals("up")){
+        if (direction.equals("up")) {
             checkCollisionUp();
             positionOy--;
             return;
         }
-        if(direction.equals("right")){
+        if (direction.equals("right")) {
             checkCollisionRight();
             positionOx++;
             return;
         }
-        if(direction.equals("down")){
+        if (direction.equals("down")) {
             checkCollisionDown();
             positionOy++;
             return;
         }
-        if(direction.equals("left")){
+        if (direction.equals("left")) {
             checkCollisionLeft();
             positionOx--;
             return;
