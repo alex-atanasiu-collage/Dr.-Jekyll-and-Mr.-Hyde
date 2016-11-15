@@ -143,19 +143,19 @@ function draw() {
 
 document.onkeydown = function(e) {
     switch (e.keyCode) {
-        case 37:
+        case 65:
             console.log('left');
             move('left');
             break;
-        case 38:
+        case 87:
             console.log('up');
             move('up');
             break;
-        case 39:
+        case 68:
             console.log('right');
             move('right');
             break;
-        case 40:
+        case 83:
             console.log('down');
             move('down');
             break;

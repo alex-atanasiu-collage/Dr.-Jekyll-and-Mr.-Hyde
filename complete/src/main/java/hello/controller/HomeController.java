@@ -39,6 +39,9 @@ public class HomeController {
         if (!existingPlayer){
             game.playerList.add(new Player(message.getContent()));
         }
+        if (game.getCurrentState()==Game.State.APP_INITIALISED && game.playerList.size() == 4) {
+            game.startGame();
+        }
         return game;
     }
 
@@ -57,7 +60,6 @@ public class HomeController {
     @MessageMapping("/move")
     @SendTo("/topic/game")
     public Game move(Move move) throws Exception{
-        Thread.sleep(1000);
         System.out.println(move.getPlayerName() + "   " + move.getMove());
         Player player = game.getPlayer(move.getPlayerName());
         //Test
