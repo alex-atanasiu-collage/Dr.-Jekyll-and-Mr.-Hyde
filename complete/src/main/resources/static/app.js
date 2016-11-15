@@ -1,17 +1,14 @@
 var stompClient = null;
 var gameOn = false;
 
-var up = false;
-var right = false;
-var down = false;
-var left = false;
-
 var mapLenght = 1000;
 var mapHeight = 1000;
-var wallLat = 10;
-var charLat = 4 * wallLat;
+var wallLat = 6;
+var charLat = 6 * wallLat;
 
 var gameInfo;
+var colors = {'0': 'red', '1': 'green', '2': 'blue', '3': 'GoldenRod'};
+var hydeIndex;
 
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
@@ -59,6 +56,10 @@ function move(move) {
     stompClient.send("/app/move", {}, JSON.stringify({'playerName': $("#name").val(), "move": move}));
 }
 
+function isHyde(player) {
+  return true;
+}
+
 // Response from server
 function showGame(game) {
     gameInfo = game;
@@ -72,7 +73,7 @@ function showGame(game) {
         // show the scores; display them only once
         if (!gameOn) {
             for (var i = 0; i < nrOfPlayers; i++) {
-                $("#scores").append("<div class=\"col-xs-6 col-sm-3\"><div>" + game.playerList[i].name +
+                $("#scores").append("<div class=\"col-xs-6 col-sm-3\" style=\"color:" + colors[i] + "\"><div>" + game.playerList[i].name +
                         "</div><div>Score: " + game.playerList[i].score + "</div> </div>");
             }
             $("#greetings").html("");
@@ -83,16 +84,29 @@ function showGame(game) {
     }
 
     for (var i = 0; i < nrOfPlayers; i++) {
+        // if new player, draw it on the map
         if (allSprites.length <= i) {
-            var img = loadImage("pumpkin_40x40.png");
-            var s = createSprite((game.playerList[i].positionOx - 2) * wallLat,
-                                 (game.playerList[i].positionOy - 2) * wallLat,
+            if (isHyde(game.playerList[i])) {
+                var img = loadImage("hyde_player_36.png");
+                hydeIndex = i;
+            } else {
+                var img = loadImage(colors[i] + "_player_36.png");
+            }
+            var s = createSprite((game.playerList[i].positionOx - 3) * wallLat,
+                                 (game.playerList[i].positionOy - 3) * wallLat,
                                  charLat, charLat);
             s.addImage(img);
         }
         else {
-            allSprites[i].position.x = (game.playerList[i].positionOx - 2) * wallLat;
-            allSprites[i].position.y = (game.playerList[i].positionOy - 2) * wallLat;
+            // change character image if Hyde has changed
+            if (isHyde(game.playerList[i]) && i != hydeIndex) {
+                var img = loadImage("hyde_player_36.png");
+                allSprites[i].addImage(img);
+                hydeIndex = i;
+            }
+            // update character position
+            allSprites[i].position.x = (game.playerList[i].positionOx - 3) * wallLat;
+            allSprites[i].position.y = (game.playerList[i].positionOy - 3) * wallLat;
         }
     }
 }
@@ -117,10 +131,11 @@ function disconnect() {
 
 // Setup for drawing
 function setup() {
-	createCanvas(mapLenght, mapHeight);
+	var canvas = createCanvas(mapLenght, mapHeight);
+	canvas.parent('sketch-holder');
 }
 
-// Draw on canvas; this is called continously
+// Draw on canvas; this is called continuously
 function draw() {
   // draw map
   if (gameInfo != undefined) {
@@ -141,21 +156,22 @@ function draw() {
   drawSprites();
 }
 
+// Key events for moving on the map
 document.onkeydown = function(e) {
     switch (e.keyCode) {
-        case 37:
+        case 65: //'a'
             console.log('left');
             move('left');
             break;
-        case 38:
+        case 87: //'w'
             console.log('up');
             move('up');
             break;
-        case 39:
+        case 68: //'d'
             console.log('right');
             move('right');
             break;
-        case 40:
+        case 83: //'s'
             console.log('down');
             move('down');
             break;
