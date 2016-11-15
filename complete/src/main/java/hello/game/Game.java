@@ -45,6 +45,11 @@ public class Game {
         currentState = State.APP_INITIALISED;
     }
 
+	public int[][] getBoard(){
+
+		return board;
+	}
+
     public Player getPlayer(String name){
         for(Player player : playerList){
             if(player.getName().equals(name)){
