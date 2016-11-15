@@ -4,7 +4,6 @@ import hello.message.Message;
 import hello.game.Game;
 import hello.game.Player;
 import hello.message.Move;
-import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
