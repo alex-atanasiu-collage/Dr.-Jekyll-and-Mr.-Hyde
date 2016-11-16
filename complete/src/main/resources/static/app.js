@@ -5,10 +5,15 @@ var mapLenght = 1000;
 var mapHeight = 1000;
 var wallLat = 6;
 var charLat = 6 * wallLat;
+var halfCharLat = charLat / 2;
+var DIMENSION_SCALE = 1000;
 
 var gameInfo;
 var colors = {'0': 'red', '1': 'green', '2': 'blue', '3': 'GoldenRod'};
 var hydeIndex = 0;
+var hydeImage = {};
+var jekyllImages = [];
+var mapImage = {};
 
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
@@ -47,8 +52,8 @@ function connect() {
         stompClient.send("/app/start", {}, JSON.stringify({'content': $("#name").val()}));
 
         stompClient.subscribe('/topic/movement', function (infoPlayers) {
-            //draw the players
-            showPlayers(JSON.parse(infoPlayers.body));
+            if (gameInfo)
+                gameInfo.infoPlayers = JSON.parse(infoPlayers.body);
         });
 
     });
@@ -82,21 +87,22 @@ function showGame(game) {
         $("#game").append("<p> The game has started. </p>")
     }
 
-    if(gameOn){
-        hydeIndex = game.infoPlayers.hydeIndex;
-        for(var i = 0; i < nrOfPlayers; i++){
-            if(isHyde(i)) {
-                var img = loadImage("hyde_player_36.png");
-            } else {
-                var img = loadImage(colors[i] + "_player_36.png");
+    mapImage = createImage(gameInfo.board.length * wallLat, gameInfo.board.length * wallLat);
+    mapImage.loadPixels();
+    for (x = 0; x < gameInfo.board.length; x++) {
+        for (y = 0; y < gameInfo.board.length; y++) {
+            var actualColor = color(255, 255, 255);
+            if (gameInfo.board[x][y]) {
+                actualColor = color(0, 29, 178)
             }
-            var s = createSprite((game.infoPlayers.playerList[i].positionOx - 3) * wallLat,
-                (game.infoPlayers.playerList[i].positionOy - 3) * wallLat,
-                charLat, charLat);
-            s.addImage(img);
+            for (i = x * wallLat ; i < (x + 1) * wallLat ; i++) {
+                for (j = y * wallLat ; j < (y + 1) * wallLat ; j++) {
+                    mapImage.set(i, j, actualColor);
+                }
+            }
         }
     }
-
+    mapImage.updatePixels();
 }
 
 $(function () {
@@ -121,49 +127,57 @@ function disconnect() {
 function setup() {
 	var canvas = createCanvas(mapLenght, mapHeight);
 	canvas.parent('sketch-holder');
+	frameRate(60);
+	hydeImage = loadImage("hyde_player_36.png");
+	for(var i = 0; i < 4; i++) {
+        jekyllImages[i] = loadImage(colors[i] + "_player_36.png");
+    }
+
+
 }
 
 // Draw on canvas; this is called continuously
 function draw() {
-  // draw map
-  if (gameInfo != undefined) {
-      for(x = 0; x < gameInfo.board.length; x++) {
-        for (y = 0; y < gameInfo.board.length; y++) {
-            if (gameInfo.board[y][x] == 0) {
-                fill(255, 255, 255);
-                noStroke();
-                rect(x * wallLat, y * wallLat, wallLat, wallLat);
-            } else {
-                fill(0, 29, 178);
-                noStroke();
-                rect(x * wallLat, y * wallLat, wallLat, wallLat);
-            }
+    // draw map
+//    background(255);
+    if (gameInfo != undefined) {
+        image(mapImage, 0, 0);
+//        fill(0, 29, 178);
+//        //noStroke();
+//        for(x = 0; x < gameInfo.board.length; x++) {
+//            for (y = 0; y < gameInfo.board.length; y++) {
+//                if (gameInfo.board[y][x] == 1) {
+//                    rect(x * wallLat, y * wallLat, wallLat, wallLat);
+//                }
+//            }
+//        }
+        if (gameOn) {
+            drawPlayers();
         }
-      }
-  }
-  drawSprites();
+    }
+
+}
+
+function drawPlayers() {
+    var nrOfPlayers = gameInfo.infoPlayers.playerList.length;
+    hydeIndex = gameInfo.infoPlayers.hydeIndex;
+    for (var i = 0; i < nrOfPlayers; i++) {
+        if (isHyde(i)) {
+            image(  hydeImage,
+                    gameInfo.infoPlayers.playerList[i].absoluteX * wallLat / DIMENSION_SCALE - halfCharLat,
+                    gameInfo.infoPlayers.playerList[i].absoluteY * wallLat / DIMENSION_SCALE - halfCharLat);
+        }
+        else {
+            image(  jekyllImages[i],
+                    gameInfo.infoPlayers.playerList[i].absoluteX * wallLat / DIMENSION_SCALE - halfCharLat,
+                    gameInfo.infoPlayers.playerList[i].absoluteY * wallLat / DIMENSION_SCALE - halfCharLat);
+        }
+    }
 }
 
 // Send the move to the server
 function move(move) {
     stompClient.send("/app/move", {}, JSON.stringify({'playerName': $("#name").val(), "move": move}));
-}
-
-function showPlayers(infoPlayers) {
-    var  nrOfPlayers = infoPlayers.playerList.length;
-    if(gameOn) {
-        hydeIndex = infoPlayers.hydeIndex;
-        for (var i = 0; i < nrOfPlayers; i++) {
-            if (isHyde(i)) {
-                var img = loadImage("hyde_player_36.png");
-            } else {
-                var img = loadImage(colors[i] + "_player_36.png");
-            }
-            allSprites[i].addImage(img)
-            allSprites[i].position.x = (infoPlayers.playerList[i].positionOx - 3) * wallLat;
-            allSprites[i].position.y = (infoPlayers.playerList[i].positionOy - 3) * wallLat;
-        }
-    }
 }
 
 // Key events for moving on the map

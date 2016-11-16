@@ -8,6 +8,8 @@ import hello.message.Move;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -15,6 +17,9 @@ public class HomeController {
 
     @Autowired
     private Game game;
+
+    @Autowired
+    private SimpMessagingTemplate template;
 
     @MessageMapping("/hello")
     @SendTo("/topic/greetings")
@@ -43,13 +48,14 @@ public class HomeController {
     }
 
     @MessageMapping("/move")
-    @SendTo("/topic/movement")
-    public InfoPlayers move(Move move) throws Exception{
-
+    public void move(Move move) throws Exception {
         Player player = game.getPlayer(move.getPlayerName());
-        player.setPositionOx(player.getPositionOx() + 3);
-
-        return game.getInfoPlayers();
+        player.setDirection(move.getMove());
     }
 
+    @Scheduled(fixedDelay = 10)
+    public void publishUpdates(){
+        if(game.getCurrentState().equals(Game.State.GAME_IN_PROGRESS));
+            template.convertAndSend("/topic/movement", game.getInfoPlayers());
+    }
 }
