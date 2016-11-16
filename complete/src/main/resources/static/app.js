@@ -138,19 +138,8 @@ function setup() {
 
 // Draw on canvas; this is called continuously
 function draw() {
-    // draw map
-//    background(255);
     if (gameInfo != undefined) {
         image(mapImage, 0, 0);
-//        fill(0, 29, 178);
-//        //noStroke();
-//        for(x = 0; x < gameInfo.board.length; x++) {
-//            for (y = 0; y < gameInfo.board.length; y++) {
-//                if (gameInfo.board[y][x] == 1) {
-//                    rect(x * wallLat, y * wallLat, wallLat, wallLat);
-//                }
-//            }
-//        }
         if (gameOn) {
             drawPlayers();
         }
