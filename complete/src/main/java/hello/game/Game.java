@@ -19,6 +19,27 @@ public class Game {
     private InfoPlayers infoPlayers;
     public int board[][];
 
+    public enum State {
+        APP_INITIALISED,
+        GAME_IN_PROGRESS,
+        GAME_ENDED
+    }
+    private static int HYDE_TIME = 10000;
+    private static int GAME_TIME = 60000;
+    private static int FRAME_TIME = 10;
+
+    private State currentState;
+    private Timer mrHydeTimer;
+    private Timer gameTimer;
+    private Timer refreshTimer;
+
+    public State getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(State currentState) {
+        this.currentState = currentState;
+    }
 
     public class Conf {
         public int jekyllTime;
@@ -37,6 +58,7 @@ public class Game {
     }
 
     public Game(){
+        currentState = State.APP_INITIALISED;
         //generate random maze
         Random rand = new Random();
         DrJ one = new DrJ(rand.nextInt(3) + 1);
@@ -174,4 +196,68 @@ public class Game {
         System.out.println(config.maxRounds + " "+ config.jekyllTime);
         return config;
     }
+
+    private void changeMrHyde() {
+        //TODO Logic to change Mr Hyde
+
+        int hideIndex = -1;
+        int minDistance = 10000;
+
+        List<Player> players = infoPlayers.getPlayerList();
+        Player drHyde = players.get(infoPlayers.getHydeIndex());
+        for(int i = 0; i < players.size(); i++){
+            if(i != infoPlayers.getHydeIndex()){
+                Player player = players.get(i);
+                int a = Math.abs(player.getPositionOx() - drHyde.getPositionOx());
+                a = a * a;
+                int b = Math.abs(player.getPositionOy() - drHyde.getPositionOy());
+                b = b * b;
+                if(Math.sqrt(a + b) < minDistance){
+                    minDistance = (int)Math.sqrt(a + b);
+                    hideIndex = i;
+                }
+            }
+        }
+
+        infoPlayers.setHydeIndex(hideIndex);
+    }
+
+    public void startGame() {
+        currentState = State.GAME_IN_PROGRESS;
+        mrHydeTimer = new Timer();
+        mrHydeTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                changeMrHyde();
+            }
+        }, 0, HYDE_TIME);
+
+        gameTimer = new Timer();
+        gameTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                endGame();
+            }
+        }, GAME_TIME);
+
+        refreshTimer = new Timer();
+        refreshTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                computePositions();
+            }
+            }, 0, FRAME_TIME);
+    }
+
+    private void computePositions() {
+    //TODO Function to compute the next position for each player
+    }
+
+    private void endGame() {
+        currentState = State.GAME_ENDED;
+        gameTimer.cancel();
+        mrHydeTimer.cancel();
+        refreshTimer.cancel();
+    }
+
 }
