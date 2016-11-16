@@ -66,7 +66,7 @@ function showGame(game) {
     $("#game").html("");
     var nrOfPlayers = game.infoPlayers.playerList.length;
     if(nrOfPlayers < 4 && gameOn == false) {
-        $("#game").append("<p> Wait for the other players to enter the game </p>")
+        $("#game").append("<p><i> Wait for the other players to enter the game </p>")
     } else {
         // show the scores; display them only once
         if (!gameOn) {
