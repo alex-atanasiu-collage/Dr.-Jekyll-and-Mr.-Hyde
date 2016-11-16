@@ -1,5 +1,7 @@
 package hello.game;
 
+import java.util.Random;
+
 /**
  * Created by Lavini on 11/4/2016.
  */
@@ -11,12 +13,11 @@ public class Player {
     private int score;
     private String name;
 
-    public Player(String name, int board[][]) {
+    public Player(String name, int board[][], int x, int y) {
         this.name = name;
         this.score = 0;
-        //TODO random generate position so that we are inside the labyrinth
-        this.positionOx = 10;
-        this.positionOy = 10;
+        this.positionOx = x;
+        this.positionOy = y;
     }
 
     public int getPositionOx() {

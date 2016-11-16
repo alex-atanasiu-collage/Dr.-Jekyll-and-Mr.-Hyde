@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Lavini on 11/15/2016.
@@ -44,7 +45,24 @@ public class InfoPlayers {
             }
         }
         if (!existingPlayer){
-            playerList.add(new Player(name, board));
+            //generate random position so that we are inside the labyrinth
+            boolean ok = true;
+            Random rand = new Random();
+            int x, y;
+            do {
+                x = rand.nextInt(100);
+                y = rand.nextInt(100);
+                if( x < 3 || y < 3 ){
+                    continue;
+                }
+                ok = false;
+                for(int i = 0; i <= 3; i++) {
+                    if (board[x][y + i] == 1 || board[x][y - i] == 1 || board[x + i][y] == 1 || board[x - i][y] == 1) {
+                        ok = true;
+                    }
+                }
+            } while (ok);
+            playerList.add(new Player(name, board, x, y));
         }
     }
 
