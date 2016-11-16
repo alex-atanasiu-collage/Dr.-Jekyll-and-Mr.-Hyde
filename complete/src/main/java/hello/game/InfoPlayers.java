@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javafx.util.Pair;
+
 /**
  * Created by Lavini on 11/15/2016.
  */
@@ -34,7 +36,9 @@ public class InfoPlayers {
     }
 
     public void setHydeIndex(int hydeIndex) {
+        playerList.get(this.hydeIndex).unsetHyde();
         this.hydeIndex = hydeIndex;
+        playerList.get(this.hydeIndex).setHyde();
     }
 
     public void addPlayer(String name, int board[][]){
@@ -45,24 +49,9 @@ public class InfoPlayers {
             }
         }
         if (!existingPlayer){
-            //generate random position so that we are inside the labyrinth
-            boolean ok = true;
-            Random rand = new Random();
-            int x, y;
-            do {
-                x = rand.nextInt(100);
-                y = rand.nextInt(100);
-                if( x < 3 || y < 3 ){
-                    continue;
-                }
-                ok = false;
-                for(int i = 0; i <= 3; i++) {
-                    if (board[x][y + i] == 1 || board[x][y - i] == 1 || board[x + i][y] == 1 || board[x - i][y] == 1) {
-                        ok = true;
-                    }
-                }
-            } while (ok);
-            playerList.add(new Player(name, board, x, y));
+            Player newPlayer = new Player(name);
+            newPlayer.setRandomPosition(board);
+            playerList.add(newPlayer);
         }
     }
 
