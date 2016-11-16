@@ -1,6 +1,7 @@
 package hello.game;
 
 import javafx.util.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -13,16 +14,30 @@ import java.util.*;
 
 @Component
 public class Game {
+
+    @Autowired
+    private InfoPlayers infoPlayers;
+    public int board[][];
+
+
     public class Conf {
         public int jekyllTime;
         public int maxRounds;
     }
+
     public String configFile = "config.txt";
     public String scoreFile = "score.txt";
-    public int board[][];
-    public List<Player> playerList;
+
+    public InfoPlayers getInfoPlayers() {
+        return infoPlayers;
+    }
+
+    public void setInfoPlayers(InfoPlayers infoPlayers) {
+        this.infoPlayers = infoPlayers;
+    }
 
     public Game(){
+        //generate random maze
         Random rand = new Random();
         DrJ one = new DrJ(rand.nextInt(3) + 1);
         DrS two = new DrS(rand.nextInt(3) + 1);
@@ -54,16 +69,18 @@ public class Game {
                 board[m + i][k + j] = drj[i][j];
             }
         }
-        playerList = new ArrayList<>();
     }
 
     public Player getPlayer(String name){
-        for(Player player : playerList){
-            if(player.getName().equals(name)){
-                return player;
-            }
-        }
-        return null;
+        return infoPlayers.getPlayer(name);
+    }
+
+    public void addPlayer(String name){
+        infoPlayers.addPlayer(name, board);
+    }
+
+    public void removePlayer(String name){
+        infoPlayers.removePlayer(name);
     }
 
     public ArrayList<Pair<String, Integer>> getScore (String fileName) {

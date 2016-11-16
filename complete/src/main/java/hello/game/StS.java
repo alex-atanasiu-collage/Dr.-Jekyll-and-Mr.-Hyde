@@ -1,6 +1,6 @@
 package hello.game;
 
-public class StS extends Board {
+public class StS{
 
 	public StS(int index) {
 		this.index = index;
