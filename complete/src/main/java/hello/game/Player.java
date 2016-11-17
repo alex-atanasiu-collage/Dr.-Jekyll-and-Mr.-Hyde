@@ -10,7 +10,7 @@ public class Player {
     public static int HALF_SIZE = 2;
     public static int DIMENSION_SCALE = 1000;
     public static int JEKYLL_SPEED = 100;
-    public static int HYDE_SPEED = 300;
+    public static int HYDE_SPEED = 200;
 
     public enum Direction {
         LEFT,
@@ -171,6 +171,11 @@ public class Player {
     }
 
     public boolean hydeCollision(int nextX, int nextY, Player hyde){
+
+        if(hyde == null){
+            return false;
+        }
+
         int jLeft = getRelativeX() - HALF_SIZE;
         int jRight = getRelativeX() + HALF_SIZE;
         int jTop = getRelativeY() - HALF_SIZE;

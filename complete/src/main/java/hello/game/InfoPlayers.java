@@ -48,10 +48,14 @@ public class InfoPlayers {
                 existingPlayer = true;
             }
         }
-        if (!existingPlayer){
+        if (!existingPlayer) {
             Player newPlayer = new Player(name);
             newPlayer.setRandomPosition(board);
             playerList.add(newPlayer);
+            if(playerList.size() - 1 == hydeIndex) {
+                newPlayer.setHyde();
+            }
+
         }
     }
 
