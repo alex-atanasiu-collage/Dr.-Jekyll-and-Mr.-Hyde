@@ -16,10 +16,18 @@ Proiectul isi propune sa implementeze un joc asemanator cu celebrul PacMan, inti
 
 ## Ghidul utilizatorului
 Pentru a porni jocul trebuiesc urmariti urmatorii pasi:
+
 1. Se cloneaza repository-ul local
+
 2. In directorul complete, se deschide un terminal/cmd si se ruleaza:
+
   2.1 "mvn clean"
+  
   2.2 "mvn install"
+  
   2.3 "mvn application:run"
+  
 3. Intr-un browser accesati localhost:8080
+
 4. De pe alte statii apelati ip_statie:8080
+
