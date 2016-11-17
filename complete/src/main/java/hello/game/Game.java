@@ -25,7 +25,7 @@ public class Game {
     }
 
     private static int HYDE_TIME = 20000;
-    private static int GAME_TIME = 100000;
+    private static int GAME_TIME = 300000; //5 min
     private static int FRAME_TIME = 10;
 
     private State currentState;
