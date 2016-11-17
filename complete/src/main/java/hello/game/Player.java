@@ -6,8 +6,8 @@ import java.util.Random;
  * Created by Lavini on 11/4/2016.
  */
 public class Player {
-    public static int SIZE = 6;
-    public static int HALF_SIZE = 3;
+    public static int SIZE = 4;
+    public static int HALF_SIZE = 2;
     public static int DIMENSION_SCALE = 1000;
     public static int JEKYLL_SPEED = 100;
     public static int HYDE_SPEED = 300;
@@ -171,14 +171,18 @@ public class Player {
     }
 
     public boolean hydeCollision(int nextX, int nextY, Player hyde){
-        //TODO mihai
-//        System.out.println("Next");
-//        System.out.println(nextX);
-//        System.out.println(hyde.getAbsoluteX());
-//        System.out.println(nextY);
-//        System.out.println(hyde.getAbsoluteY());
-        return (Math.abs(nextX - hyde.getAbsoluteX()) <= 6
-                || Math.abs(nextY - hyde.getAbsoluteY()) <= 6);
+        int jLeft = getRelativeX() - HALF_SIZE;
+        int jRight = getRelativeX() + HALF_SIZE;
+        int jTop = getRelativeY() - HALF_SIZE;
+        int jBottom = getRelativeY() + HALF_SIZE;
+
+        int hLeft = hyde.getRelativeX() - HALF_SIZE;
+        int hRight = hyde.getRelativeX() + HALF_SIZE;
+        int hTop = hyde.getRelativeY() - HALF_SIZE;
+        int hBottom = hyde.getRelativeY() + HALF_SIZE;
+
+        return (jLeft < hRight && jRight > hLeft &&
+                jTop < hBottom && jBottom > hTop);
     }
 
 
