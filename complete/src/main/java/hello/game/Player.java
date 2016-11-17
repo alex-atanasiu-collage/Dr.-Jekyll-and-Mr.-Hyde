@@ -6,10 +6,10 @@ import java.util.Random;
  * Created by Lavini on 11/4/2016.
  */
 public class Player {
-    public static int SIZE = 4;
-    public static int HALF_SIZE = 2;
+    public static int SIZE = 6;
+    public static int HALF_SIZE = 3;
     public static int DIMENSION_SCALE = 1000;
-    public static int JEKYLL_SPEED = 200;
+    public static int JEKYLL_SPEED = 100;
     public static int HYDE_SPEED = 300;
 
     public enum Direction {
@@ -43,6 +43,7 @@ public class Player {
         do {
             x = rand.nextInt(board.length) * DIMENSION_SCALE;
             y = rand.nextInt(board.length) * DIMENSION_SCALE;
+
         } while (wallCollision(x, y, board));
         absoluteX = x;
         absoluteY = y;
@@ -99,6 +100,10 @@ public class Player {
         isHyde = true;
     }
 
+    public boolean isHyde(){
+        return isHyde;
+    }
+
     public void unsetHyde() {
         isHyde = false;
     }
@@ -122,6 +127,19 @@ public class Player {
     private boolean wallCollision(int nextX, int nextY, int board[][]) {
         int relativeX = nextX / DIMENSION_SCALE;
         int relativeY = nextY / DIMENSION_SCALE;
+
+        if(relativeX < HALF_SIZE || relativeY < HALF_SIZE){
+            return true;
+        }
+
+        if(relativeX - HALF_SIZE >= 106 || relativeY - HALF_SIZE >= 106){
+            return true;
+        }
+
+        if(relativeX + HALF_SIZE >= 106 || relativeY + HALF_SIZE >= 106){
+            return true;
+        }
+
         // check each corner
         if (board[relativeX - HALF_SIZE][relativeY - HALF_SIZE] == 1) {
             return true;
@@ -152,7 +170,19 @@ public class Player {
         return false;
     }
 
-    public void advance(int board[][]) {
+    public boolean hydeCollision(int nextX, int nextY, Player hyde){
+        //TODO mihai
+//        System.out.println("Next");
+//        System.out.println(nextX);
+//        System.out.println(hyde.getAbsoluteX());
+//        System.out.println(nextY);
+//        System.out.println(hyde.getAbsoluteY());
+        return (Math.abs(nextX - hyde.getAbsoluteX()) <= 6
+                || Math.abs(nextY - hyde.getAbsoluteY()) <= 6);
+    }
+
+
+    public void advance(int board[][], Player hyde) {
         int delta = isHyde? HYDE_SPEED : JEKYLL_SPEED;
         int nextX = absoluteX;
         int nextY = absoluteY;
@@ -174,9 +204,17 @@ public class Player {
                 break;
             }
         }
-        if (!wallCollision(nextX, nextY, board)) {
-            absoluteX = nextX;
-            absoluteY = nextY;
+
+        if(!isHyde() && hydeCollision(nextX, nextY, hyde)){
+            //increase the score for hyde
+            hyde.setScore(hyde.getScore() + 1);
+            //regenerate random position for the current player that collided hyde
+            setRandomPosition(board);
+        } else {
+            if (!wallCollision(nextX, nextY, board)) {
+                absoluteX = nextX;
+                absoluteY = nextY;
+            }
         }
     }
 

@@ -25,7 +25,7 @@ public class Game {
     }
 
     private static int HYDE_TIME = 20000;
-    private static int GAME_TIME = 600000;
+    private static int GAME_TIME = 6000000;
     private static int FRAME_TIME = 10;
 
     private State currentState;
@@ -205,8 +205,6 @@ public class Game {
     }
 
     private void changeMrHyde() {
-        //TODO Logic to change Mr Hyde
-
         int hideIndex = -1;
         int minDistance = Integer.MAX_VALUE;
 
@@ -256,11 +254,19 @@ public class Game {
         }, 0, FRAME_TIME);
     }
 
+    private Player getHyde(){
+        for(Player p : infoPlayers.getPlayerList()){
+            if(p.isHyde()){
+                return p;
+            }
+        }
+        return null;
+    }
+
     public void computePositions() {
-        //TODO Function to compute the next position for each player
         List<Player> playerList = infoPlayers.getPlayerList();
         for (Player player : playerList) {
-            player.advance(board);
+            player.advance(board, getHyde());
         }
     }
 
@@ -269,6 +275,10 @@ public class Game {
         gameTimer.cancel();
         mrHydeTimer.cancel();
         refreshTimer.cancel();
+
+        //TODO ionut -> save scores in score.txt
+
+        //TODO lavinia -> notify UI that game ended
     }
 
 }
