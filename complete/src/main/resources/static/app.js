@@ -52,8 +52,10 @@ function connect() {
         stompClient.send("/app/start", {}, JSON.stringify({'content': $("#name").val()}));
 
         stompClient.subscribe('/topic/movement', function (infoPlayers) {
-            if (gameInfo)
+            if (gameInfo) {
                 gameInfo.infoPlayers = JSON.parse(infoPlayers.body);
+                updateScores();
+            }
         });
 
     });
@@ -61,6 +63,15 @@ function connect() {
 
 function isHyde(index) {
   return index == hydeIndex;
+}
+
+function updateScores() {
+    if (gameOn) {
+        var nrOfPlayers = gameInfo.infoPlayers.playerList.length;
+        for (var i = 0; i < nrOfPlayers; i++) {
+            $(".score").eq(i).html("Score: " + gameInfo.infoPlayers.playerList[i].score);
+        }
+    }
 }
 
 // Response from server
@@ -78,7 +89,7 @@ function showGame(game) {
             for (var i = 0; i < nrOfPlayers; i++) {
                 $("#scores").append("<div class=\"col-xs-6 col-sm-3\" style=\"color:" + colors[i] + "\"><div>"
                     + game.infoPlayers.playerList[i].name
-                    + "</div><div>Score: " + game.infoPlayers.playerList[i].score + "</div> </div>");
+                    + "</div><div class=\"score\">Score: " + game.infoPlayers.playerList[i].score + "</div> </div>");
             }
             $("#greetings").html("");
         }
